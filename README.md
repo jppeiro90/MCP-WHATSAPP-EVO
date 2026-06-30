@@ -58,7 +58,11 @@ claude mcp add evolution-whatsapp -s user \
 
 Then `claude mcp list` should show it as `✔ Connected`. Restart the client to load the tools.
 
-## Use with Claude Desktop / Cursor
+## Use with other MCP clients
+
+This is a standard MCP server over **stdio**, so it works with any MCP-compatible
+client. They all use the same configuration shape — only the file/UI where you put
+it changes:
 
 ```json
 {
@@ -74,6 +78,26 @@ Then `claude mcp list` should show it as `✔ Connected`. Restart the client to 
   }
 }
 ```
+
+On Windows, use the full path to `node.exe` as `command` and double-escape
+backslashes in the path (`"C:\\path\\to\\MCP-WHATSAPP-EVO\\dist\\main.cjs"`).
+
+Where to put that config, per client:
+
+| Client | Where |
+|--------|-------|
+| **Claude Desktop** | `claude_desktop_config.json` — macOS: `~/Library/Application Support/Claude/`, Windows: `%APPDATA%\Claude\` |
+| **Cursor** | `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (per project) |
+| **Windsurf** | `~/.codeium/windsurf/mcp_config.json` (Settings → Cascade → MCP) |
+| **VS Code (Copilot/Agent)** | `.vscode/mcp.json` — note: keys go under a top-level `"servers"` object instead of `"mcpServers"` |
+| **Cline / Roo Code (VS Code ext.)** | the extension's *MCP Servers → Configure* panel (same JSON) |
+| **Continue** | `~/.continue/config.yaml` under `mcpServers` (YAML form of the same fields) |
+| **Zed** | `settings.json` under `"context_servers"` |
+| **Any other MCP client** | point it at `command: node`, `args: [".../dist/main.cjs"]`, and pass the two env vars |
+
+After editing the config, **restart the client** so it spawns the server and loads
+the tools. The only requirements are Node.js ≥ 18 on the machine and the two
+environment variables.
 
 ## Notes on phone numbers & JIDs
 
